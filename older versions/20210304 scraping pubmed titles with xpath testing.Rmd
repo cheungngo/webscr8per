@@ -1,0 +1,37 @@
+---
+title: "20210304 scraping pubmed titles with xpath testing"
+author: "Cheung Ngo"
+date: "2021年3月4日"
+output: html_document
+---
+
+```{r}
+library(rvest)
+```
+
+```{r}
+extract_title = function(path, no_page, per_page) {
+  xpath1 = '//*[@id="search-results"]/section/div['
+  xpath2 = ']/div/article['
+  xpath3 = ']/div[2]/div[1]/a'
+  result = c()
+  for (i in 1:no_page) {
+    pathi = read_html(paste(path, i, sep = ""))
+    for (j  in 1:per_page) {
+      xp = paste(xpath1, i, xpath2, j, xpath3, sep = "")
+      result = c(result, pathi %>%
+                   html_node(xpath = xp) %>% 
+                   html_text())
+    }
+  }
+  return(result)
+}
+```
+
+```{r}
+
+y = extract_title('https://pubmed.ncbi.nlm.nih.gov/?term=ptsd%20ketamine&size=200&page=', 2, 200)
+
+y
+```
+
