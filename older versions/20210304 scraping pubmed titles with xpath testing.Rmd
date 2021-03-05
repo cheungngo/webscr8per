@@ -32,6 +32,7 @@ extract_title = function(path, no_page, per_page) {
 
 y = extract_title('https://pubmed.ncbi.nlm.nih.gov/?term=ptsd%20ketamine&size=200&page=', 2, 200)
 
+
 y
 ```
 

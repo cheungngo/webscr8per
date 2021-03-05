@@ -1,0 +1,28 @@
+---
+title: "20210305c extracting the contents"
+author: "cheungngo"
+date: "5 March 2021"
+output: html_document
+---
+
+```{r}
+href = read_html(link[1])
+href %>% html_node("a.id-link") %>% html_text()
+
+sapply(link, function (i) {
+  href = read_html(i)
+  href %>% html_node("a.id-link") %>% html_text()
+})
+
+sapply(link, function (i) {
+  href = read_html(i)
+  href %>% html_node(xpath = '//*[@id="full-view-identifiers"]/li[3]/span/a') %>% html_text()
+})
+
+# for the abstract
+sapply(link, function (i) {
+  href = read_html(i)
+  href %>% html_node(xpath = '//*[@id="enc-abstract"]') %>% html_text()
+})
+```
+

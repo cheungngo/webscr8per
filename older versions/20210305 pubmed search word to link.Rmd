@@ -10,14 +10,14 @@ words2link_pubmed = function(words) {
   code = gsub(" ", "%20", words)
   link = paste("https://pubmed.ncbi.nlm.nih.gov/?term=",
                code,
-               "&sort=date&size=200&page=",
+               "&size=200&page=",
                sep = "")
   return(link)
 }
 ```
 
 ```{r}
-sample_link = "https://pubmed.ncbi.nlm.nih.gov/?term=(PTSD%20OR%20Depression)%20AND%20Ketamine&sort=date&size=200&page="
+sample_link = "https://pubmed.ncbi.nlm.nih.gov/?term=(PTSD%20OR%20Depression)%20AND%20Ketamine&size=200&page="
 link = words2link_pubmed("(PTSD OR Depression) AND Ketamine")
 link
 identical(sample_link, link)
