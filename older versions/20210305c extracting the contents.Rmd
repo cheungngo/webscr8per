@@ -20,9 +20,32 @@ sapply(link, function (i) {
 })
 
 # for the abstract
-sapply(link, function (i) {
+
+link = words2link_pubmed("ptsd ketamine")
+library(zeallot)
+c(title, link) %<-% extract_searchpage_pubmed(link, 211)
+
+href = sapply(link[1:10], function (i) {
   href = read_html(i)
   href %>% html_node(xpath = '//*[@id="enc-abstract"]') %>% html_text()
+  href = gsub("\\s+", "", href)
 })
+
+x = read_html(link[i]) %>% html_node(xpath = '//*[@id="enc-abstract"]') %>% html_text()
+
+library(stringr)
+
+str_squish(x)
+
+abstract = c()
+for (i in 1:10) {
+  href = xml2::read_html(link[i])
+  abs = href %>% html_node(xpath = '//*[@id="enc-abstract"]') %>% html_text()
+  abs = str_squish(abs)
+  abstract = c(abstract, abs)
+}
+
+
+abstract[10]
 ```
 
