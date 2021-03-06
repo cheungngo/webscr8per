@@ -23,6 +23,8 @@ words2link_pubmed = function(words) {
 #' c(title, link) %<-% extract_searchpage_pubmed(link, 10) # the first 10 entries
 extract_searchpage_pubmed = function(path, no_of_results) {
 
+  library(rvest)
+
   xpath1 = '//*[@id="search-results"]/section/div['
   xpath2 = ']/div/article['
   xpath3 = ']/div[2]/div[1]/a'
