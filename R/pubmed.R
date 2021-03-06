@@ -33,22 +33,21 @@ extract_searchpage_pubmed = function(path, no_of_results) {
   hrefs = c()
 
   for (i in 1:no_page) {
-    pathi = read_html(paste(path, i, sep = ""))
+    pathi = xml2::read_html(paste(path, i, sep = ""))
     for (j  in 1:per_page) {
 
       if (((i-1)*200 + j) > no_of_results) {next}
 
       xp = paste(xpath1, i, xpath2, j, xpath3, sep = "")
       title = pathi %>%
-        html_node(xpath = xp) %>%
-        html_text()
-      title = gsub("\n                ", "", title)
-      title = gsub("\n              ", "", title)
+        rvest::html_node(xpath = xp) %>%
+        rvest::html_text()
+      title = stringr::str_squish(title)
       titles = c(titles, title)
 
       href = pathi %>%
-        html_node(xpath = xp) %>%
-        html_attr("href")
+        rvest::html_node(xpath = xp) %>%
+        rvest::html_attr("href")
       href = paste("https://pubmed.ncbi.nlm.nih.gov", href, sep = "")
       hrefs = c(hrefs, href)
 
@@ -56,4 +55,21 @@ extract_searchpage_pubmed = function(path, no_of_results) {
   }
 
   return(list(titles, hrefs))
+}
+
+#' Extracting the abstract from pubmed
+#'
+#' @param link : link obtained by the function extract_searchpage_pubmed()
+#' @return abstract of the article (a string)
+#' @examples
+#' c(title, link) %<-% extract_searchpage_pubmed(words2link_pubmed("ptsd ketamine"), 211)
+#' abstract = c()
+#' for (i in 1:10) {
+#'   abstract = c(abstract, extract_abstract_pubmed(link[i]))
+#' }
+extract_abstract_pubmed = function(link) {
+  href = xml2::read_html(link)
+  abs = href %>% html_node(xpath = '//*[@id="enc-abstract"]') %>% html_text()
+  abs = stringr::str_squish(abs)
+  return(abs)
 }
