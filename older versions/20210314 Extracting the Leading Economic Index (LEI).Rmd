@@ -1,0 +1,66 @@
+---
+title: "20210314 Extracting the Leading Economic Index (LEI)"
+author: "cheungngo"
+date: "3/14/2021"
+output: html_document
+---
+
+
+```{r}
+
+library(rvest)
+library(stringr)
+
+path = "https://tradingeconomics.com/country-list/leading-economic-index"
+
+path = read_html(path)
+
+x = path %>% html_node("table.table.table-hover") %>% html_text()
+x = str_squish(x)
+x = str_split(x, " ")[[1]]
+
+tidyx = c()
+nextskip = 0
+
+for (i in 6:(length(x))) {
+  if (nextskip == 1) {
+    nextskip = 0
+    next
+  }
+  last = substr(x[i],nchar(x[i]),nchar(x[i]))
+  if (i != length(x)) {
+    first = substr(x[i+1],1,1)
+  } else {
+    first = 0
+  }
+  
+  if ((last %in% c(letters, LETTERS)) & (first %in% c(letters, LETTERS)) & x[i]!="points") {
+    tidyx = c(tidyx, paste(x[i],x[i+1],sep = "-"))
+    nextskip = 1
+  } else {
+      tidyx = c(tidyx, x[i])
+      nextskip = 0
+      }
+}
+
+y = matrix(tidyx, ncol = 5, byrow = T)
+y
+
+percent = c()
+for (i in 1:nrow(y)) {
+  if (y[i,5] == "%") {
+    percent = c(percent, as.numeric(y[i,2]))
+  } else {
+    percent = c(percent, (as.numeric(y[i,2])-as.numeric(y[i,3]))/as.numeric(y[i,3]))
+  }
+}
+
+final = as.data.frame(cbind(y[,1],percent,y[,4]))
+colnames(final) = c("Country", "Percent", "Last Update")
+final$Percent = as.numeric(as.character(final$Percent))
+
+final = final[order(final$Percent),]
+
+final
+```
+
